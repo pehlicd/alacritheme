@@ -301,8 +301,13 @@ func (m *model) updateConfig(selectedPath string) error {
 		config = make(map[string]interface{})
 	}
 
-	config["live_config_reload"] = true
-	config["import"] = []string{selectedPath}
+	if general, ok := config["general"].(map[string]interface{}); ok {
+		general["live_config_reload"] = true
+		general["import"] = []string{selectedPath}
+	} else {
+		config["live_config_reload"] = true
+		config["import"] = []string{selectedPath}
+	}
 
 	var buf bytes.Buffer
 	encoder := toml.NewEncoder(&buf)
